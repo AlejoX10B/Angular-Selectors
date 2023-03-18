@@ -8,7 +8,7 @@
     <div class="col">
       <label class="form-label">Continente:</label>
       <select class="form-control" formControlName="region">
-        <option value="">-- Seleccione continente --</option>
+        <option [value]="null">-- Seleccione continente --</option>
         <option *ngFor="let region of regions"
                 [value]="region | lowercase">{{ region }}</option>
       </select>
@@ -16,11 +16,11 @@
   </div>
 
   <!-- Country -->
-  <div class="row mb-3">
+  <div *ngIf="countries.length > 0" class="row mb-3">
     <div class="col">
       <label class="form-label">País:</label>
       <select class="form-control" formControlName="country">
-        <option value="">-- Seleccione país --</option>
+        <option [value]="null">-- Seleccione país --</option>
         <option *ngFor="let country of countries"
                 [value]="country?.alpha3Code">{{ country?.name }}</option>
       </select>
@@ -28,14 +28,22 @@
   </div>
 
   <!-- Borders -->
-  <div class="row mb-3">
+  <div *ngIf="borders.length > 0" class="row mb-3">
     <div class="col">
       <label class="form-label">Fronteras:</label>
       <select class="form-control" formControlName="border">
-        <option value="">-- Seleccione frontera --</option>
+        <option [value]="null">-- Seleccione frontera --</option>
         <option *ngFor="let border of borders"
-                [value]="border">{{ border }}</option>
+                [value]="border?.alpha3Code">{{ border?.name }}</option>
       </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="row">
+    <div class="col">
+      <div class="alert alert-primary">
+        Cargando...
+      </div>
     </div>
   </div>
 

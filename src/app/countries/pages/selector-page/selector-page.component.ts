@@ -21,7 +21,9 @@ export class SelectorPageComponent {
 
   regions: string[] = [];
   countries: MinCountry[] = [];
-  borders: string[] = [];
+  borders: MinCountry[] = [];
+
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,20 +44,34 @@ export class SelectorPageComponent {
 
     this.coForm.get('region')?.valueChanges
       .pipe(
-        tap(_ => this.coForm.get('country')?.reset(null)),
+        tap(_ => {
+          this.loading = true;
+
+          this.countries = [];
+          this.coForm.get('country')?.reset(null);
+        }),
         switchMap(region => this.cs.getCountriesByRegion(region))
       )
-      .subscribe(countries => this.countries = countries);
+      .subscribe(countries => {
+        this.loading = false;
+        this.countries = countries;
+      });
 
     this.coForm.get('country')?.valueChanges
       .pipe(
         tap(_ => {
+          this.loading = true;
+
           this.borders = [];
           this.coForm.get('border')?.reset(null);
         }),
-        switchMap(code => this.cs.getCountryByAlpha3Code(code))
+        switchMap(code => this.cs.getCountryByAlpha3Code(code)),
+        switchMap( country => this.cs.getCountriesByAlpha3Code( country?.borders! ))
       )
-      .subscribe(borders => this.borders = borders?.borders || []);
+      .subscribe(countries => {
+        this.loading = false;
+        this.borders = countries || [];
+      });
   }
 
   save() {

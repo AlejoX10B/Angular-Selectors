@@ -1,10 +1,7 @@
 
 export interface MinCountry {
-  name:       string;
-  alpha3Code: string;
-}
-
-export interface Borders {
-  borders: string[];
+  name:       string | null;
+  alpha3Code: string | null;
+  borders?:   string[] | null;
 }
 
